@@ -5,6 +5,10 @@
   "description": "Syntax highlighting and macro hover support for Slayout shader tools.",
   "version": "0.0.1",
   "publisher": "sssarana",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sssarana/slayout-tools.git"
+  },
   "engines": {
     "vscode": "^1.100.0"
   },

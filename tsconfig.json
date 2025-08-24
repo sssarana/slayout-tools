@@ -4,7 +4,7 @@
     "lib": ["es6"],
     "module": "commonjs",
     "rootDir": "src",
-    "outDir": "out",
+    "outDir": "../out",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
