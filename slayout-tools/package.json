@@ -1,6 +1,7 @@
 {
   "name": "slayout-tools",
   "displayName": "Slayout Tools",
+  "icon": "slayout.png",
   "description": "Syntax highlighting and macro hover support for Slayout shader tools.",
   "version": "0.0.1",
   "publisher": "sssarana",
