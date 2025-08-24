@@ -53,3 +53,10 @@ Example of metadata file:
     "lazy": false
   }
 }
+```
+
+---
+
+## Requirements
+- VS Code v1.100.0 or newer
+- macros.json file in an accessible subdirectory for tooltips
