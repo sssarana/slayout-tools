@@ -1,18 +1,55 @@
-# slayout-tools
+# Slayout Tools
+
+**Slayout Tools** is a Visual Studio Code extension that provides:
+
+- Syntax highlighting for `.slayout` files (custom shader layout definitions)
+- Macro highlighting in `.shader` files
+- Hover support for macros, showing per-backend definitions from `macros.json`
+
+---
 
 ## Features
 
-## Requirements
+- **Syntax Highlighting**
+  - Highlights macros in both `.slayout` and `.shader` files
+  - Custom scopes defined for macro tokens
 
+- **Hover Tooltip for Macros**
+  - Hovering over a macro like `%MY_MACRO` in a `.shader` file shows definitions from `macros.json`
+  - Displays backend-specific versions (GLSL, HLSL, SPIR-V, MSL, etc.)
+  - Supports directory scanning — finds `macros.json` in sibling folders near the shader file
 
-## Extension Settings
+---
 
+## Folder Structure Example
 
-## Release Notes
+To enable hover support, your project should contain:
+```
+project/
+├── example/
+│ ├── input.shader
+| ├── layout.slayout
+│ └── outputs/
+│   └── macros.json
+```
 
+- When you hover over a macro in `my_shader.shader`, the extension will automatically look for `macros.json` in any subfolder of the same directory (like `outputs/`) and use it to populate tooltips.
 
-## Following extension guidelines
+---
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+## Macro Format
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+The `macros.json` file should contain backend-specific definitions per macro name. 
+This file is generated automatically when using [this repo](https://github.com/sssarana/slayout), you do not need to do anything extra, just build the shaders at least once.
+
+Example of metadata file:
+
+```json
+{
+  "LIGHT_BLOCK": {
+    "glsl": "uniform Light { vec3 direction; };",
+    "hlsl": "cbuffer Light : register(b0) { float3 direction; };",
+    "msl": "constant Light& light [[buffer(0)]];",
+    "lazy": false
+  }
+}

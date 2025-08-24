@@ -28,39 +28,58 @@ const vscode = __importStar(require("vscode"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 let macroDefs = {};
-function loadMacrosJson(workspaceRoot) {
-    const macroFile = path.join(workspaceRoot, 'macros.json');
-    if (fs.existsSync(macroFile)) {
-        const content = fs.readFileSync(macroFile, 'utf-8');
-        try {
-            macroDefs = JSON.parse(content);
-        }
-        catch (err) {
-            console.error("Failed to parse macros.json", err);
+function loadMacrosJson(documentPath) {
+    const shaderDir = path.dirname(documentPath);
+    try {
+        const entries = fs.readdirSync(shaderDir, { withFileTypes: true });
+        for (const entry of entries) {
+            if (entry.isDirectory()) {
+                const subDir = path.join(shaderDir, entry.name);
+                const macroFile = path.join(subDir, 'macros.json');
+                if (fs.existsSync(macroFile)) {
+                    const content = fs.readFileSync(macroFile, 'utf-8');
+                    const parsed = JSON.parse(content);
+                    macroDefs = {}; // clear old ones
+                    for (const [macro, defs] of Object.entries(parsed)) {
+                        if (typeof defs === 'object' && defs !== null) {
+                            macroDefs[macro.toUpperCase()] = defs;
+                        }
+                    }
+                    console.log("Loaded macros.json from:", macroFile);
+                    return;
+                }
+            }
         }
     }
+    catch (err) {
+        console.error("Error while loading macros.json:", err);
+    }
+    macroDefs = {};
+    console.warn("No macros.json found in any subdirectory of", shaderDir);
 }
 function activate(context) {
-    var _a, _b;
-    const root = (_b = (_a = vscode.workspace.workspaceFolders) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.uri.fsPath;
-    if (root)
-        loadMacrosJson(root);
     const hoverProvider = vscode.languages.registerHoverProvider('shader', {
         provideHover(document, position) {
+            loadMacrosJson(document.uri.fsPath);
             const range = document.getWordRangeAtPosition(position, /%[A-Z_][A-Z0-9_]*/);
             if (!range)
                 return;
-            const word = document.getText(range).substring(1); // drop %
-            if (macroDefs[word]) {
-                const defs = macroDefs[word];
-                const md = new vscode.MarkdownString();
-                md.appendMarkdown(`**Macro: \`${word}\`**\n\n`);
-                for (const [backend, code] of Object.entries(defs)) {
-                    md.appendCodeblock(code.trim(), backend);
-                }
-                return new vscode.Hover(md);
+            const word = document.getText(range).substring(1); // remove %
+            const macro = macroDefs[word];
+            if (!macro) {
+                return new vscode.Hover(`Unknown macro: \`${word}\``);
             }
-            return new vscode.Hover(`Unknown macro: \`${word}\``);
+            const md = new vscode.MarkdownString();
+            md.appendMarkdown(`**Macro: \`${word}\`**\n\n`);
+            for (const [backend, code] of Object.entries(macro)) {
+                // Skip non-code fields like "lazy"
+                if (typeof code !== 'string')
+                    continue;
+                md.appendMarkdown(`**${backend}**\n`);
+                md.appendCodeblock(code.trim(), backend);
+                md.appendMarkdown(`\n---\n`);
+            }
+            return new vscode.Hover(md);
         }
     });
     context.subscriptions.push(hoverProvider);
