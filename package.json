@@ -1,0 +1,28 @@
+{
+  "name": "slayout-syntax",
+  "displayName": "Slayout Syntax Highlighting",
+  "description": "Syntax highlighting for .slayout shader layout definition files.",
+  "version": "0.0.1",
+  "publisher": "your-name",
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "categories": ["Programming Languages"],
+  "contributes": {
+    "languages": [
+      {
+        "id": "slayout",
+        "aliases": ["Slayout", "slayout"],
+        "extensions": [".slayout"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "slayout",
+        "scopeName": "source.slayout",
+        "path": "./syntaxes/slayout.tmLanguage.json"
+      }
+    ]
+  }
+}

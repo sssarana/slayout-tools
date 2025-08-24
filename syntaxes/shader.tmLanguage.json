@@ -1,0 +1,12 @@
+{
+  "name": "Shader Macros",
+  "scopeName": "source.shader",
+  "patterns": [
+    {
+      "name": "entity.name.macro.shader",
+      "match": "%[A-Z_][A-Z0-9_]*"
+    }
+  ],
+  "fileTypes": ["shader"],
+  "uuid": "e8e2b330-459d-11ee-be56-0242ac120002"
+}
