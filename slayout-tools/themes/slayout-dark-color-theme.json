@@ -1,0 +1,14 @@
+{
+  "name": "Slayout Dark",
+  "type": "dark",
+  "colors": {},
+  "tokenColors": [
+    {
+      "scope": "entity.name.macro.shader",
+      "settings": {
+        "foreground": "#FFD700",
+        "fontStyle": "bold"
+      }
+    }
+  ]
+}

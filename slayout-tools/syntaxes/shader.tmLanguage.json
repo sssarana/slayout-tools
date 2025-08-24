@@ -1,0 +1,12 @@
+{
+  "name": "Shader Macros",
+  "scopeName": "source.shader",
+  "fileTypes": ["shader"],
+  "patterns": [
+    {
+      "name": "constant.character.escape",
+      "match": "\\%[A-Za-z_][A-Za-z0-9_]*"
+    }
+  ],
+  "uuid": "e8e2b330-459d-11ee-be56-0242ac120002"
+}
